@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <report
+        id="stock_summary_report"
+        model="stockzero"
+        string="Stock zero"
+        report_type="qweb-pdf"
+        name="jr_stock_zero.comercial"
+        file="jr_stock_zero.comercial"
+      
+    />
+
+    <template id="comercial">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.env.user.lang"/>
+                <t t-call="report.internal_layout">
+                    <div class="page">
+                        <h2>
+                            Informe Stock
+                        </h2>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th>Ubicacion</th>
+                                    <th>Codigo</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                                <tr t-foreach="o.get_orders()" t-as="comercial">
+                                    <td>
+                                        <span t-esc="comercial[0]"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="comercial[1]"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="comercial[2]"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="comercial[3]"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

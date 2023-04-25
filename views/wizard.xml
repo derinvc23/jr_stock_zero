@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="comercial_rulesmaxmin_view_form" model="ir.ui.view">
+        <field name="name">comercial.rulesmaxmin.view.form</field>
+        <field name="model">stockzero</field>
+        <field name="arch" type="xml">
+            <form>        
+                <group colspan="4" col="4">
+                    <field name="tipo_stock" required="1"/>
+                    <field name="locations_ids"/>
+                
+                    
+                </group>
+                <footer>
+                    <button name="generate" type="object" string="Generar" class="oe_highlight"/>
+                    or
+                    <button special="cancel" string="Cancelar"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="view_product_3_inherit_form" model="ir.ui.view">
+                <field name="name">view.sale.inherit.form3</field>
+                <field name="model">product.template</field>
+                <field name="inherit_id" ref="product.product_template_form_view"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//page[@name='notes']" position="after">
+                        <page string="Ubicaciones" >
+                            <group name="ubicaciones">
+                               
+                                <field name="location_ids1"/>
+                            </group>
+                         </page>
+                    </xpath>
+                </field>
+        </record>
+
+    <act_window id="stock_summary_action"
+        name="stock zero"
+        res_model="stockzero"
+        view_mode="form"
+        target="new"/>
+
+    <menuitem id="comercial_summary_menu"
+        name="Stock zero"
+        parent="stock.menu_stock_inventory_control"
+        action="stock_summary_action"/>
+</odoo>
