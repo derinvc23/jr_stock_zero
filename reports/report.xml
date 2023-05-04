@@ -28,7 +28,7 @@
                                     <th>Producto</th>
                                     <th>Cantidad</th>
                                 </tr>
-                                <tr t-foreach="o.get_orders()" t-as="comercial">
+                                <tr t-foreach="o.get_orders1()" t-as="comercial">
                                     <td>
                                         <span t-esc="comercial[0]"/>
                                     </td>

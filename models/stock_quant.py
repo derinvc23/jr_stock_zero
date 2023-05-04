@@ -114,5 +114,36 @@ class StockZero(models.TransientModel):
             orders=orders1+quant
 
         return orders
+    
+    def get_orders1(self):
+        if self.tipo_stock == "z":
+            quants = self.env["stock.quant"].search([
+                ("location_id", "in", self.locations_ids.ids),
+                ("qty", "<=", 0),
+            ])
+        elif self.tipo_stock == "p":
+            quants = self.env["stock.quant"].search([
+                ("location_id", "in", self.locations_ids.ids),
+            ])
+        elif self.tipo_stock == "t":
+            quants = self.env["stock.quant"].search([
+                ("location_id", "in", self.locations_ids.ids),
+            ])
+
+        orders = {}
+        for quant in quants:
+            key = (quant.location_id.id, quant.product_id.id)
+            if key not in orders:
+                orders[key] = [
+                    quant.location_id.name,
+                    quant.product_id.default_code,
+                    quant.product_id.name,
+                    quant.qty,
+                ]
+            else:
+                orders[key][3] += quant.qty
+
+        for order in orders.values():
+            yield order
 
 
