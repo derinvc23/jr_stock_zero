@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <report
+        id="comercial_summary_report"
+        model="rulesmaxmin"
+        string="Informe Maximos y Minimos"
+        report_type="qweb-pdf"
+        name="max_min_rules.comercial"
+        file="max_min_rules.comercial"
+      
+    />
+
+    <template id="comercial">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.env.user.lang"/>
+                <t t-call="report.internal_layout">
+                    <div class="page">
+                        <h2>
+                            Informe Maximos y minimos
+                            <span t-field="o.tipo"/>
+                        </h2>
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Almacen</th>
+                                    <th>Unidad de medida</th>
+                                    <th>Cantidad Minima</th>
+                                    <th>Cantidad Maxima</th>
+                                    <th>Stock</th>
+                                </tr>
+                                <tr t-foreach="o.get_orders()" t-as="comercial">
+                                    <td>
+                                        <span t-field="comercial.product_id"/>
+                                    </td>
+                                    <t t-if="comercial.warehouse_id">
+                                        <td>
+                                            <span t-esc="comercial.warehouse_id.name"/>
+                                        </td>
+                                    </t>
+                                    <td>
+                                        <span t-esc="comercial.product_uom.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="comercial.product_min_qty"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="comercial.product_max_qty"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="comercial.stock_ware"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
