@@ -131,14 +131,15 @@ class StockZero(models.TransientModel):
             ])
             for product in products:
                 for location in product.location_ids1:
-                    key = (location.id, product.id)
-                    if key not in orders:
-                        orders[key] = [
-                            location.name,
-                            product.default_code,
-                            product.name,
-                            product.qty_available,
-                        ]
+                    if location in self.locations_ids:
+                        key = (location.id, product.id)
+                        if key not in orders:
+                            orders[key] = [
+                                location.name,
+                                product.default_code,
+                                product.name,
+                                product.qty_available,
+                            ]
         elif self.tipo_stock == "p":
             quants = self.env["stock.quant"].search([
                 ("location_id", "in", self.locations_ids.ids),
@@ -165,14 +166,15 @@ class StockZero(models.TransientModel):
             ])
             for product in products:
                 for location in product.location_ids1:
-                    key = (location.id, product.id)
-                    if key not in orders:
-                        orders[key] = [
-                            location.name,
-                            product.default_code,
-                            product.name,
-                            product.qty_available,
-                        ]
+                    if location in self.locations_ids:
+                        key = (location.id, product.id)
+                        if key not in orders:
+                            orders[key] = [
+                                location.name,
+                                product.default_code,
+                                product.name,
+                                product.qty_available,
+                            ]
             for quant in quants:
                 key = (quant.location_id.id, quant.product_id.id)
                 if key not in orders:
@@ -217,6 +219,7 @@ class StockZero(models.TransientModel):
         work=0
         worksheet[work] = workbook.add_sheet("stock")
         
+        worksheet[work].write_merge(0, 1, 0, 6, 'STOCK ', main_header_style)
         for i in range(0, 12):
             worksheet[work].col(i).width = 140 * 30
 
