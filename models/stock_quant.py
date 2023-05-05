@@ -1,4 +1,11 @@
 from odoo import fields, models,api
+import xlwt
+from xlwt import easyxf
+from cStringIO import StringIO
+import base64
+import itertools
+from operator import itemgetter
+import operator
 
 
 class ProductProduct(models.Model):
@@ -116,65 +123,160 @@ class StockZero(models.TransientModel):
         return orders
     
     def get_orders1(self):
-        if self.tipo_stock=="z":
-            obj = self.env["product.product"].search([
-    ("location_ids1", "in", self.locations_ids.ids),
-    ("qty_available","<=",0),
+        orders = {}
+        if self.tipo_stock == "z":
+            products = self.env["product.product"].search([
+                ("location_ids1", "in", self.locations_ids.ids),
+                ("qty_available", "<=", 0),
             ])
-            orders = []
-            for line in obj:
-                for record in line.location_ids1:
-                    orders.append([record.name,line.default_code,line.name,line.qty_available])
-
-            
-
-        elif self.tipo_stock=="p":
-            quants= self.env["stock.quant"].search(
-                [
-                    ("location_id", "in", self.locations_ids.ids),
-                ]
-            )
-            
-            orders={}
-            for quant in quants:
-                key=(quant.location_id.id,quant.product_id.id)
-                if key not in orders:
-                    orders[key]=[quant.location_id.name,quant.product_id.default_code,quant.product_id.name,quant.qty]
-                else:
-                    orders[key][3]+=quant.qty
-            
-            for order in orders.values():
-                orders.append(order)
-
-        elif self.tipo_stock=="t":
-            products= self.env["product.product"].search(
-                [
-                    ("location_ids1", "in", self.locations_ids.ids),
-                    ("qty_available","<=",0),
-                ]
-            )
-
-            quants= self.env["stock.quant"].search(
-                [
-                    ("location_id", "in", self.locations_ids.ids),
-                ]
-            )
-
-            orders=[]
             for product in products:
-                for record in product.location_ids1:
-                    orders.append([record.name,product.default_code,product.name,product.qty_available])
-
+                for location in product.location_ids1:
+                    key = (location.id, product.id)
+                    if key not in orders:
+                        orders[key] = [
+                            location.name,
+                            product.default_code,
+                            product.name,
+                            product.qty_available,
+                        ]
+        elif self.tipo_stock == "p":
+            quants = self.env["stock.quant"].search([
+                ("location_id", "in", self.locations_ids.ids),
+            ])
             for quant in quants:
-                key=(quant.location_id.id,quant.product_id.id)
+                key = (quant.location_id.id, quant.product_id.id)
                 if key not in orders:
-                    orders[key]=[quant.location_id.name,quant.product_id.default_code,quant.product_id.name,quant.qty]
+                    orders[key] = [
+                        quant.location_id.name,
+                        quant.product_id.default_code,
+                        quant.product_id.name,
+                        quant.qty,
+                    ]
                 else:
-                    orders[key][3]+=quant.qty
-            
-            for order in orders.values():
-                orders.append(order)
+                    orders[key][3] += quant.qty
 
-        return orders
+        elif self.tipo_stock == "t":
+            products = self.env["product.product"].search([
+                ("location_ids1", "in", self.locations_ids.ids),
+                ("qty_available", "<=", 0),
+            ])
+            quants = self.env["stock.quant"].search([
+                ("location_id", "in", self.locations_ids.ids),
+            ])
+            for product in products:
+                for location in product.location_ids1:
+                    key = (location.id, product.id)
+                    if key not in orders:
+                        orders[key] = [
+                            location.name,
+                            product.default_code,
+                            product.name,
+                            product.qty_available,
+                        ]
+            for quant in quants:
+                key = (quant.location_id.id, quant.product_id.id)
+                if key not in orders:
+                    orders[key] = [
+                        quant.location_id.name,
+                        quant.product_id.default_code,
+                        quant.product_id.name,
+                        quant.qty,
+                    ]
+                else:
+                    orders[key][3] += quant.qty
+
+        return orders.values()
+    
+    @api.multi
+    def export_stock_ledger(self):
+        workbook = xlwt.Workbook()
+        filename = 'stock_zero.xls'
+        # Style
+        main_header_style = easyxf('font:height 400;pattern: pattern solid, fore_color gray25;'
+                                   'align: horiz center;font: color black; font:bold True;'
+                                   "borders: top thin,left thin,right thin,bottom thin")
+
+        header_style = easyxf('font:height 200;pattern: pattern solid, fore_color gray25;'
+                              'align: horiz center;font: color black; font:bold True;'
+                              "borders: top thin,left thin,right thin,bottom thin")
+
+        group_style = easyxf('font:height 200;pattern: pattern solid, fore_color gray25;'
+                              'align: horiz left;font: color black; font:bold True;'
+                              "borders: top thin,left thin,right thin,bottom thin")
+
+        text_left = easyxf('font:height 150; align: horiz left;' "borders: top thin,bottom thin")
+        text_right_bold = easyxf('font:height 200; align: horiz right;font:bold True;' "borders: top thin,bottom thin")
+        text_right_bold1 = easyxf('font:height 200; align: horiz right;font:bold True;' "borders: top thin,bottom thin", num_format_str='0.00')
+        text_center = easyxf('font:height 150; align: horiz center;' "borders: top thin,bottom thin")
+        text_right = easyxf('font:height 150; align: horiz right;' "borders: top thin,bottom thin",
+                            num_format_str='0.00')
+
+        worksheet = []
+        
+        worksheet.append(1)
+        work=0
+        worksheet[work] = workbook.add_sheet("stock")
+        
+        for i in range(0, 12):
+            worksheet[work].col(i).width = 140 * 30
+
+
+
+
+        tags = ['Ubicacion','Codigo','Producto','Cantidad']
+
+        r= 3
+        
+        c = 1
+        for tag in tags:
+            worksheet[work].write(r, c, tag, header_style)
+            c+=1
+
+        lines=self.get_orders1()
+        
+        r=4
+        
+        for line in lines:
+            
+            c=1
+            worksheet[work].write(r, c, line[0], text_left)
+            c+=1
+            worksheet[work].write(r,c,line[1], text_left)
+            c += 1
+            worksheet[work].write(r, c, line[2], text_right)
+            c+=1
+            worksheet[work].write(r, c, line[3], text_right)
+           
+            
+            r+=1
+          
+
+
+
+         
+
+        fp = StringIO()
+        workbook.save(fp)
+        export_id = self.env['stockzero2'].create(
+            {'excel_file': base64.encodestring(fp.getvalue()), 'file_name': filename})
+        fp.close()
+
+        return {
+            'view_mode': 'form',
+            'res_id': export_id.id,
+            'res_model': 'stockzero2',
+            'view_type': 'form',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+
+
+ 
+
+class StockExcel(models.TransientModel):
+    _name = "stockzero2"
+
+    excel_file = fields.Binary('Excel Report')
+    file_name = fields.Char('Excel File')
 
 

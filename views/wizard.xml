@@ -12,7 +12,9 @@
                     
                 </group>
                 <footer>
-                    <button name="generate" type="object" string="Generar" class="oe_highlight"/>
+                    <button name="generate" type="object" string="PDF" class="oe_highlight"/>
+                    or
+                    <button name="export_stock_ledger" type="object" string="Excel" class="oe_highlight"/>
                     or
                     <button special="cancel" string="Cancelar"/>
                 </footer>
@@ -45,4 +47,28 @@
         name="Stock zero"
         parent="stock.menu_stock_inventory_control"
         action="stock_summary_action"/>
+
+    <record id="view_zero_inventory_excel2" model="ir.ui.view">
+        <field name="name">Stock Inventory zero</field>
+        <field name="model">stockzero2</field>
+        <field name="arch" type="xml">
+            <form string="Stock Ledger Excel">
+                <group>
+                    <field name="excel_file" readonly="1" filename="file_name"/>
+                    <field name="file_name" invisible="1"/>
+                </group>
+                <footer>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_zero_inventory_excel2" model="ir.actions.act_window">
+        <field name="name">Stock excel</field>
+        <field name="res_model">stockzero2</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_zero_inventory_excel2"/>
+        <field name="target">new</field>
+    </record>
 </odoo>
