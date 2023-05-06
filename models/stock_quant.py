@@ -127,18 +127,18 @@ class StockZero(models.TransientModel):
         if self.tipo_stock == "z":
             products = self.env["product.product"].search([
                 ("location_ids1", "in", self.locations_ids.ids),
-                ("qty_available", "<=", 0),
+                #("qty_available", "<=", 0),
             ])
             for product in products:
-                for location in product.location_ids1:
-                    if location in self.locations_ids:
-                        key = (location.id, product.id)
+                for location in product.warehouses:
+                    if location.lot_stock_id in self.locations_ids and location.product_qty_available<=0:
+                        key = (location.lot_stock_id.id, product.id)
                         if key not in orders:
                             orders[key] = [
-                                location.name,
+                                location.lot_stock_id.name,
                                 product.default_code,
                                 product.name,
-                                product.qty_available,
+                                location.product_qty_available,
                             ]
         elif self.tipo_stock == "p":
             quants = self.env["stock.quant"].search([
@@ -159,21 +159,21 @@ class StockZero(models.TransientModel):
         elif self.tipo_stock == "t":
             products = self.env["product.product"].search([
                 ("location_ids1", "in", self.locations_ids.ids),
-                ("qty_available", "<=", 0),
+                #("qty_available", "<=", 0),
             ])
             quants = self.env["stock.quant"].search([
                 ("location_id", "in", self.locations_ids.ids),
             ])
             for product in products:
-                for location in product.location_ids1:
-                    if location in self.locations_ids:
-                        key = (location.id, product.id)
+                for location in product.warehouses:
+                    if location.lot_stock_id in self.locations_ids and location.product_qty_available<=0:
+                        key = (location.lot_stock_id.id, product.id)
                         if key not in orders:
                             orders[key] = [
-                                location.name,
+                                location.lot_stock_id.name,
                                 product.default_code,
                                 product.name,
-                                product.qty_available,
+                                location.product_qty_available,
                             ]
             for quant in quants:
                 key = (quant.location_id.id, quant.product_id.id)
