@@ -7,7 +7,11 @@
             <form>        
                 <group colspan="4" col="4">
                     <field name="tipo_stock" required="1"/>
-                    <field name="locations_ids"/>
+                    <field name="tipo_cate"/>
+                    <field name="categ_id" attrs="{'required': [('tipo_cate', '=', 'c')], 'invisible': [('tipo_cate', '!=', 'c')]}"/>
+                    <field name="product_id" attrs="{'required': [('tipo_cate', '=', 'p')], 'invisible': [('tipo_cate', '!=', 'p')]}"/>
+
+                    <field name="locations_ids" required="1"/>
                 
                     
                 </group>
