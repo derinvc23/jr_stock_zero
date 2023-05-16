@@ -76,7 +76,7 @@ class StockZero(models.TransientModel):
         elif self.tipo_stock=="p":
             obj= self.env["stock.quant"].search(
                 [
-                    ("location_id", "in", self.locations_ids.ids),
+                    ("product_id.location_id1", "in", self.locations_ids.ids),
                     
                 ]
             )
@@ -106,7 +106,7 @@ class StockZero(models.TransientModel):
 
             quant1 = self.env["stock.quant"].search(
                 [
-                    ("location_id", "in", self.locations_ids.ids),
+                    ("product_id.location_id1", "in", self.locations_ids.ids),
                     
                 ]
             )
