@@ -46,8 +46,8 @@ class StockZero(models.TransientModel):
         ("p","Producto"),
         ("c","Categoria"),],string="Tipo de Filtro")
 
-    categ_id=fields.Many2one("product.category",string="Categoria de productos")
-    product_id=fields.Many2one("product.product",string="Productos")
+    categ_id=fields.Many2many("product.category",string="Categoria de productos")
+    product_id=fields.Many2many("product.product",string="Productos")
     
 
     
@@ -134,7 +134,7 @@ class StockZero(models.TransientModel):
         if self.tipo_stock == "z" and self.tipo_cate=="p":
             products = self.env["product.product"].search([
                 ("location_ids1", "in", self.locations_ids.ids),
-                ("id", "=", self.product_id.id),
+                ("id", "in", self.product_id.ids),
             ])
             for product in products:
                 for location in product.warehouses:
@@ -150,7 +150,7 @@ class StockZero(models.TransientModel):
         elif self.tipo_stock == "z" and self.tipo_cate=="c":
             products = self.env["product.product"].search([
                 ("location_ids1", "in", self.locations_ids.ids),
-                ("categ_id", "=", self.categ_id.id),
+                ("categ_id", "in", self.categ_id.ids),
             ])
             for product in products:
                 for location in product.warehouses:
@@ -184,7 +184,7 @@ class StockZero(models.TransientModel):
         elif self.tipo_stock == "p" and self.tipo_cate=="p":
             quants = self.env["stock.quant"].search([
                 ("product_id.location_ids1", "in", self.locations_ids.ids),
-                ("product_id.id","=",self.product_id.id)
+                ("product_id.id","in",self.product_id.ids)
             ])
             for quant in quants:
                 key = (quant.location_id.id, quant.product_id.id)
@@ -200,7 +200,7 @@ class StockZero(models.TransientModel):
         elif self.tipo_stock == "p" and self.tipo_cate=="c":
             quants = self.env["stock.quant"].search([
                 ("product_id.location_ids1", "in", self.locations_ids.ids),
-                ("product_id.categ_id","=",self.categ_id.id)
+                ("product_id.categ_id","in",self.categ_id.ids)
             ])
             for quant in quants:
                 key = (quant.location_id.id, quant.product_id.id)
@@ -265,11 +265,11 @@ class StockZero(models.TransientModel):
         elif self.tipo_stock == "t" and self.tipo_cate=="p":
             products = self.env["product.product"].search([
                 ("location_ids1", "in", self.locations_ids.ids),
-                ("id", "=", self.product_id.id),
+                ("id", "in", self.product_id.ids),
             ])
             quants = self.env["stock.quant"].search([
                 ("product_id.location_ids1", "in", self.locations_ids.ids),
-                ("product_id","=",self.product_id.id)
+                ("product_id","in",self.product_id.ids)
             ])
             for product in products:
                 for location in product.warehouses:
@@ -297,11 +297,11 @@ class StockZero(models.TransientModel):
         elif self.tipo_stock == "t" and self.tipo_cate=="c":
             products = self.env["product.product"].search([
                 ("location_ids1", "in", self.locations_ids.ids),
-                ("categ_id", "=", self.categ_id.id),
+                ("categ_id", "in", self.categ_id.ids),
             ])
             quants = self.env["stock.quant"].search([
                 ("product_id.location_ids1", "in", self.locations_ids.ids),
-                ("product_id.categ_id","=",self.categ_id.id)
+                ("product_id.categ_id","in",self.categ_id.ids)
             ])
             for product in products:
                 for location in product.warehouses:

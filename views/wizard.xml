@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="comercial_rulesmaxmin_view_form" model="ir.ui.view">
+    <record id="comercial_rulesmaxmin_view_form1" model="ir.ui.view">
         <field name="name">comercial.rulesmaxmin.view.form</field>
         <field name="model">stockzero</field>
         <field name="arch" type="xml">
