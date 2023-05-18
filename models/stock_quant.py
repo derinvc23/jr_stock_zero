@@ -187,32 +187,34 @@ class StockZero(models.TransientModel):
                 ("product_id.id","in",self.product_id.ids)
             ])
             for quant in quants:
-                key = (quant.location_id.id, quant.product_id.id)
-                if key not in orders:
-                    orders[key] = [
-                        quant.location_id.name,
-                        quant.product_id.default_code,
-                        quant.product_id.name,
-                        quant.qty,
-                    ]
-                else:
-                    orders[key][3] += quant.qty
+                if quant.location_id.id in self.locations_ids.ids:
+                    key = (quant.location_id.id, quant.product_id.id)
+                    if key not in orders:
+                        orders[key] = [
+                            quant.location_id.name,
+                            quant.product_id.default_code,
+                            quant.product_id.name,
+                            quant.qty,
+                        ]
+                    else:
+                        orders[key][3] += quant.qty
         elif self.tipo_stock == "p" and self.tipo_cate=="c":
             quants = self.env["stock.quant"].search([
                 ("product_id.location_ids1", "in", self.locations_ids.ids),
                 ("product_id.categ_id","in",self.categ_id.ids)
             ])
             for quant in quants:
-                key = (quant.location_id.id, quant.product_id.id)
-                if key not in orders:
-                    orders[key] = [
-                        quant.location_id.name,
-                        quant.product_id.default_code,
-                        quant.product_id.name,
-                        quant.qty,
-                    ]
-                else:
-                    orders[key][3] += quant.qty
+                if quant.location_id.id in self.locations_ids.ids:
+                    key = (quant.location_id.id, quant.product_id.id)
+                    if key not in orders:
+                        orders[key] = [
+                            quant.location_id.name,
+                            quant.product_id.default_code,
+                            quant.product_id.name,
+                            quant.qty,
+                        ]
+                    else:
+                        orders[key][3] += quant.qty
 
         elif self.tipo_stock == "p" and not self.tipo_cate:
             quants = self.env["stock.quant"].search([
@@ -220,16 +222,17 @@ class StockZero(models.TransientModel):
                 
             ])
             for quant in quants:
-                key = (quant.location_id.id, quant.product_id.id)
-                if key not in orders:
-                    orders[key] = [
-                        quant.location_id.name,
-                        quant.product_id.default_code,
-                        quant.product_id.name,
-                        quant.qty,
-                    ]
-                else:
-                    orders[key][3] += quant.qty
+                if quant.location_id.id in self.locations_ids.ids:
+                    key = (quant.location_id.id, quant.product_id.id)
+                    if key not in orders:
+                        orders[key] = [
+                            quant.location_id.name,
+                            quant.product_id.default_code,
+                            quant.product_id.name,
+                            quant.qty,
+                        ]
+                    else:
+                        orders[key][3] += quant.qty
 
         elif self.tipo_stock == "t" and not self.tipo_cate:
             products = self.env["product.product"].search([
@@ -251,16 +254,17 @@ class StockZero(models.TransientModel):
                                 location.product_qty_available,
                             ]
             for quant in quants:
-                key = (quant.location_id.id, quant.product_id.id)
-                if key not in orders:
-                    orders[key] = [
-                        quant.location_id.name,
-                        quant.product_id.default_code,
-                        quant.product_id.name,
-                        quant.qty,
-                    ]
-                else:
-                    orders[key][3] += quant.qty
+                if quant.location_id.id in self.locations_ids.ids:
+                    key = (quant.location_id.id, quant.product_id.id)
+                    if key not in orders:
+                        orders[key] = [
+                            quant.location_id.name,
+                            quant.product_id.default_code,
+                            quant.product_id.name,
+                            quant.qty,
+                        ]
+                    else:
+                        orders[key][3] += quant.qty
 
         elif self.tipo_stock == "t" and self.tipo_cate=="p":
             products = self.env["product.product"].search([
@@ -283,16 +287,17 @@ class StockZero(models.TransientModel):
                                 location.product_qty_available,
                             ]
             for quant in quants:
-                key = (quant.location_id.id, quant.product_id.id)
-                if key not in orders:
-                    orders[key] = [
-                        quant.location_id.name,
-                        quant.product_id.default_code,
-                        quant.product_id.name,
-                        quant.qty,
-                    ]
-                else:
-                    orders[key][3] += quant.qty
+                if quant.location_id.id in self.locations_ids.ids:
+                    key = (quant.location_id.id, quant.product_id.id)
+                    if key not in orders:
+                        orders[key] = [
+                            quant.location_id.name,
+                            quant.product_id.default_code,
+                            quant.product_id.name,
+                            quant.qty,
+                        ]
+                    else:
+                        orders[key][3] += quant.qty
         
         elif self.tipo_stock == "t" and self.tipo_cate=="c":
             products = self.env["product.product"].search([
@@ -315,16 +320,17 @@ class StockZero(models.TransientModel):
                                 location.product_qty_available,
                             ]
             for quant in quants:
-                key = (quant.location_id.id, quant.product_id.id)
-                if key not in orders:
-                    orders[key] = [
-                        quant.location_id.name,
-                        quant.product_id.default_code,
-                        quant.product_id.name,
-                        quant.qty,
-                    ]
-                else:
-                    orders[key][3] += quant.qty
+                if quant.location_id.id in self.locations_ids.ids:
+                    key = (quant.location_id.id, quant.product_id.id)
+                    if key not in orders:
+                        orders[key] = [
+                            quant.location_id.name,
+                            quant.product_id.default_code,
+                            quant.product_id.name,
+                            quant.qty,
+                        ]
+                    else:
+                        orders[key][3] += quant.qty
 
         return orders.values()
     
