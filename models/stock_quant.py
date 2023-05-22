@@ -335,7 +335,21 @@ class StockZero(models.TransientModel):
         return orders.values()
     
     @api.multi
+    def get_warehouse(self):
+        warehouse = self.get_warehouse_recursive()
+        return warehouse
+
+    def get_warehouse_recursive(self):
+        if self.usage == 'internal' and self.location_id:
+            return self.location_id.get_warehouse_recursive()
+        elif self.usage == 'internal' and not self.location_id:
+            return self
+        else:
+            return None
+    
+    @api.multi
     def export_stock_ledger(self):
+        
         workbook = xlwt.Workbook()
         filename = 'stock_zero.xls'
         # Style
@@ -368,12 +382,20 @@ class StockZero(models.TransientModel):
         for i in range(0, 12):
             worksheet[work].col(i).width = 140 * 30
 
-
+       
+        worksheet[work].write(3, 2,"Fecha", header_style)
+        worksheet[work].write(3, 3,"Ubicacion", header_style)
+        worksheet[work].write(4, 2,str(fields.Date.today()), text_left)
+        c=3
+        for record in self.locations_ids:
+            worksheet[work].write(4, c,record.name, text_left)
+            c+=1
+        
 
 
         tags = ['Ubicacion','Codigo','Producto','Cantidad']
 
-        r= 3
+        r= 5
         
         c = 1
         for tag in tags:
@@ -382,7 +404,7 @@ class StockZero(models.TransientModel):
 
         lines=self.get_orders1()
         
-        r=4
+        r=6
         
         for line in lines:
             
