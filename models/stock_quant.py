@@ -84,10 +84,10 @@ class StockZero(models.TransientModel):
             orders=[]
             for line in obj:
                 if not orders:
-                    orders.append([line.location_id.name,line.product_id.default_code,line.product_id.name,line.qty])
+                    orders.append([line.location_id.display_name,line.product_id.default_code,line.product_id.name,line.qty])
                 else:
                     for record in orders:
-                        if line.product_id.default_code== record[1] and line.location_id.name==record[0]:
+                        if line.product_id.default_code== record[1] and line.location_id.display_name==record[0]:
                             record[2]=record[2]+line.qty
 
 
@@ -119,10 +119,10 @@ class StockZero(models.TransientModel):
             quant=[]
             for line in quant1:
                 if not quant:
-                    quant.append([line.location_id.name,line.product_id.default_code,line.product_id.name,line.qty])
+                    quant.append([line.location_id.display_name,line.product_id.default_code,line.product_id.name,line.qty])
                 else:
                     for record in quant:
-                        if line.product_id.default_code== record[1] and line.location_id.name==record[0]:
+                        if line.product_id.default_code== record[1] and line.location_id.display_name==record[0]:
                             record[2]=record[2]+line.qty
             
             orders=orders1+quant
@@ -142,7 +142,7 @@ class StockZero(models.TransientModel):
                         key = (location.lot_stock_id.id, product.id)
                         if key not in orders:
                             orders[key] = [
-                                location.lot_stock_id.name,
+                                location.lot_stock_id.display_name,
                                 product.default_code,
                                 product.name,
                                 location.product_qty_available,]
@@ -158,7 +158,7 @@ class StockZero(models.TransientModel):
                         key = (location.lot_stock_id.id, product.id)
                         if key not in orders:
                             orders[key] = [
-                                location.lot_stock_id.name,
+                                location.lot_stock_id.display_name,
                                 product.default_code,
                                 product.name,
                                 location.product_qty_available,
@@ -175,7 +175,7 @@ class StockZero(models.TransientModel):
                         key = (location.lot_stock_id.id, product.id)
                         if key not in orders:
                             orders[key] = [
-                                location.lot_stock_id.name,
+                                location.lot_stock_id.display_name,
                                 product.default_code,
                                 product.name,
                                 location.product_qty_available,
@@ -191,7 +191,7 @@ class StockZero(models.TransientModel):
                     key = (quant.location_id.id, quant.product_id.id)
                     if key not in orders:
                         orders[key] = [
-                            quant.location_id.name,
+                            quant.location_id.display_name,
                             quant.product_id.default_code,
                             quant.product_id.name,
                             quant.qty,
@@ -208,7 +208,7 @@ class StockZero(models.TransientModel):
                     key = (quant.location_id.id, quant.product_id.id)
                     if key not in orders:
                         orders[key] = [
-                            quant.location_id.name,
+                            quant.location_id.display_name,
                             quant.product_id.default_code,
                             quant.product_id.name,
                             quant.qty,
@@ -226,7 +226,7 @@ class StockZero(models.TransientModel):
                     key = (quant.location_id.id, quant.product_id.id)
                     if key not in orders:
                         orders[key] = [
-                            quant.location_id.name,
+                            quant.location_id.display_name,
                             quant.product_id.default_code,
                             quant.product_id.name,
                             quant.qty,
@@ -248,7 +248,7 @@ class StockZero(models.TransientModel):
                         key = (location.lot_stock_id.id, product.id)
                         if key not in orders:
                             orders[key] = [
-                                location.lot_stock_id.name,
+                                location.lot_stock_id.display_name,
                                 product.default_code,
                                 product.name,
                                 location.product_qty_available,
@@ -258,7 +258,7 @@ class StockZero(models.TransientModel):
                     key = (quant.location_id.id, quant.product_id.id)
                     if key not in orders:
                         orders[key] = [
-                            quant.location_id.name,
+                            quant.location_id.display_name,
                             quant.product_id.default_code,
                             quant.product_id.name,
                             quant.qty,
@@ -281,7 +281,7 @@ class StockZero(models.TransientModel):
                         key = (location.lot_stock_id.id, product.id)
                         if key not in orders:
                             orders[key] = [
-                                location.lot_stock_id.name,
+                                location.lot_stock_id.display_name,
                                 product.default_code,
                                 product.name,
                                 location.product_qty_available,
@@ -291,7 +291,7 @@ class StockZero(models.TransientModel):
                     key = (quant.location_id.id, quant.product_id.id)
                     if key not in orders:
                         orders[key] = [
-                            quant.location_id.name,
+                            quant.location_id.display_name,
                             quant.product_id.default_code,
                             quant.product_id.name,
                             quant.qty,
@@ -314,7 +314,7 @@ class StockZero(models.TransientModel):
                         key = (location.lot_stock_id.id, product.id)
                         if key not in orders:
                             orders[key] = [
-                                location.lot_stock_id.name,
+                                location.lot_stock_id.display_name,
                                 product.default_code,
                                 product.name,
                                 location.product_qty_available,
@@ -324,7 +324,7 @@ class StockZero(models.TransientModel):
                     key = (quant.location_id.id, quant.product_id.id)
                     if key not in orders:
                         orders[key] = [
-                            quant.location_id.name,
+                            quant.location_id.display_name,
                             quant.product_id.default_code,
                             quant.product_id.name,
                             quant.qty,
